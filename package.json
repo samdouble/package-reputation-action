@@ -1,0 +1,49 @@
+{
+  "name": "package-reputation-action",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/index.js",
+  "keywords": [
+    "github",
+    "actions",
+    "reputation",
+    "npm",
+    "package"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samdouble/package-reputation-action.git"
+  },
+  "author": "samdouble",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samdouble/package-reputation-action/issues"
+  },
+  "homepage": "https://github.com/samdouble/package-reputation-action#readme",
+  "scripts": {
+    "audit": "npm-audit",
+    "build": "ncc build src/index.ts",
+    "lint": "eslint",
+    "test": "jest --config jest.config.ts"
+  },
+  "dependencies": {
+    "@actions/core": "^1.11.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.37.0",
+    "@vercel/ncc": "^0.38.3",
+    "eslint": "^9.31.0",
+    "eslint-plugin-jest": "^29.0.1",
+    "jest": "^30.0.4",
+    "npm-audit-pipeline": "^0.6.1",
+    "ts-jest": "^29.4.0",
+    "typescript": "^5.8.3"
+  },
+  "standard": {
+    "ignore": "dist/"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

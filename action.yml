@@ -1,0 +1,14 @@
+name: reputation-action
+description: checks on packages reputation
+author: samdouble
+inputs:
+  token:
+    description: GitHub token for creating and grooming release PRs, defaults to using secrets.GITHUB_TOKEN
+    required: false
+    default: ${{ github.token }}
+  language:
+    description: Language used in the project (one of node)
+    required: true
+runs:
+  using: node20
+  main: dist/index.js
