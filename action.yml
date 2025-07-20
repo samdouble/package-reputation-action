@@ -11,4 +11,6 @@ inputs:
     required: true
 runs:
   using: node20
+  pre: |
+    npm install -g howfat
   main: dist/index.js
