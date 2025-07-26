@@ -1,39 +1,40 @@
 import * as core from '@actions/core';
-import { spawn } from 'node:child_process';
-
-async function getDependencies() {
-  const createPromise = new Promise((resolve, reject) => {
-    const output: string[] = [];
-    const proc = spawn(
-      'npx',
-      ['howfat', '-r', 'json', '.', '--space', '2'],
-      {
-        cwd: process.cwd(),
-        env: process.env,
-        stdio: ['inherit', 'pipe', 'pipe'],
-      }
-    );
-    proc.stdout.on('data', (data: string) => {
-      core.info(data);
-      output.push(data);
-    });
-    proc.stderr.on('data', (data: string) => {
-      core.error(data);
-    });
-    proc.on('close', (code: number) => {
-      if (code !== 0) {
-        const msg = `Failed with code = ${code}`;
-        return reject(new Error(msg));
-      }
-      resolve(JSON.parse(output.join('')));
-    });
-  });
-  return createPromise;
-}
+import { getNpmRegistryResults } from './node/api';
+import { DependencyResults } from './node/types';
+import { getDependencies } from './node/utils';
+import { Language } from './types';
 
 export async function main() {
   core.info(`Running package reputation action`);
 
-  const output = await getDependencies();
-  console.log(output);
+  const language = core.getInput('language');
+  core.info(`Using language: "${language}"`);
+
+  if (language === Language.NODE) {
+    const includeDevDependencies = core.getInput('include_dev_dependencies') === 'true';
+    const includePeerDependencies = core.getInput('include_peer_dependencies') === 'true';
+    const dependenciesResults: DependencyResults = await getDependencies(
+      includeDevDependencies,
+      includePeerDependencies,
+    );
+    core.info(`Found ${dependenciesResults.dependencyCount} dependencies`);
+    core.info(JSON.stringify(dependenciesResults, null, 2));
+
+    for (const packageName of dependenciesResults.package) {
+      core.info(`Examining package: ${packageName}`);
+      const npmRegistrySearchResults = await getNpmRegistryResults(packageName);
+      if (npmRegistrySearchResults.objects.length > 0) {
+        core.info(JSON.stringify(npmRegistrySearchResults, null, 2));
+      } else {
+        core.error(`No results found for package: ${packageName}`);
+      }
+    }
+
+    // https://docs.pypi.org/api/json/
+    // https://github.com/Developmint/npm-stats-api/blob/master/src/NpmStats.php
+    // https://github.com/npm/registry/blob/main/docs/download-counts.md
+  } else {
+    core.error(`Unsupported language: "${language}"`);
+    core.setFailed('Unsupported language');
+  }
 }
