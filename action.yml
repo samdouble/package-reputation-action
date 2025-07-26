@@ -2,15 +2,19 @@ name: reputation-action
 description: checks on packages reputation
 author: samdouble
 inputs:
-  token:
-    description: GitHub token for creating and grooming release PRs, defaults to using secrets.GITHUB_TOKEN
-    required: false
-    default: ${{ github.token }}
   language:
     description: Language used in the project (one of node)
     required: true
+  include_dev_dependencies:
+    description: Whether to include dev dependencies
+    required: false
+    default: "false"
+  include_peer_dependencies:
+    description: Whether to include peer dependencies
+    required: false
+    default: "false"
 runs:
   using: node20
   pre: |
-    npm install -g howfat
+    npm install -g howfat@0.3.8
   main: dist/index.js
