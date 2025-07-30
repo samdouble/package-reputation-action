@@ -15,6 +15,5 @@ inputs:
     default: "false"
 runs:
   using: node20
-  pre: |
-    npm install -g howfat@0.3.8
+  pre: scripts/setup.js
   main: dist/index.js
