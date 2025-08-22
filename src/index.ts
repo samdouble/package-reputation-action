@@ -38,3 +38,5 @@ export async function main() {
     core.setFailed('Unsupported language');
   }
 }
+
+main();
