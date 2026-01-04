@@ -1,6 +1,6 @@
 {
   "name": "package-reputation-action",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A GitHub Action that helps being consistent across different repositories",
   "main": "src/index.js",
   "author": "samdouble",
